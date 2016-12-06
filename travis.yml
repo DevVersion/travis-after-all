@@ -1,0 +1,37 @@
+language: node_js
+sudo: false
+
+node_js:
+  - '6.9.1'
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++6
+
+branches:
+  only:
+  - master
+
+env:
+  matrix:
+    - MODE=RUN1
+    - MODE=RUN2
+
+matrix:
+  fast_finish: true
+
+install:
+  - npm install
+
+script:
+  - ./scripts/ci-test.sh
+
+after_success:
+  - ./scripts/ci-success.sh
+
+cache:
+  directories:
+    - node_modules
