@@ -5,16 +5,23 @@ if (!process.env['TRAVIS_BUILD_ID']) {
   process.exit(1);
 }
 
-
-const request = require('request');
+const request = require('request-promise');
 
 const API_ENDPOINT = 'https://api.travis-ci.org';
 const BUILD_ID = process.env['TRAVIS_BUILD_ID'];
 
-sendRequest('builds/' + BUILD_ID);
+sendRequest('builds/' + BUILD_ID)
+  .then(result => result['matrix'])
+  .then(matrixes => console.log(matrixes));
 
+/**
+ * Sends a request to the Travis CI API and parses its json.
+ * @param requestUrl Rest URL to access
+ * @returns {Promise.<Object>} Parsed JSON Object
+ */
 function sendRequest(requestUrl) {
-  request(`${API_ENDPOINT}/${requestUrl}`, (err, response, body) => {
-    console.log(body);
+  return request({
+    url: `${API_ENDPOINT}/${requestUrl}`,
+    json: true
   });
 }

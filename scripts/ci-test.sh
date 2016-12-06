@@ -2,7 +2,7 @@
 
 echo "Waiting 2min"
 
-sleep 120
+sleep 30
 
 echo "Done with Waiting"
 
