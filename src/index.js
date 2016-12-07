@@ -24,13 +24,8 @@ console.log("Waiting for other jobs to finish.");
 
 Rx.Observable
   .interval(CHECK_INTERVAL)
-  .do(() => console.log("===="))
-  .switchMap(() => getOtherJobs()
-    // .filter(job => job.id !== jobNumber)
-    .do(x => console.log("Job", x.id))
-    .every(job => !!job['finished_at'])
-  )
-  .filter(x => !!x)
+  .flatMap(() => getOtherJobs())
+  .filter(jobs => jobs.every(job => !!job['finished_at']))
   .take(1)
   .subscribe(x => console.log("Finished with all builds"));
 
@@ -40,7 +35,7 @@ Rx.Observable
  */
 function getOtherJobs() {
   return sendRequest('builds/' + buildId)
-    .flatMap(result => result['matrix']);
+    .map(result => result['matrix']);
 }
 
 /**
