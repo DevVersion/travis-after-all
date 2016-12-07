@@ -16,12 +16,15 @@ const jobNumber = process.env['TRAVIS_JOB_NUMBER'];
 
 // The leader job will always wait for the others jobs to finish.
 if (!jobNumber.endsWith('.1')) {
+  console.log("Not waiting for other jobs because only leader waits.");
   return;
 }
 
+console.log("Waiting for other jobs to finish.");
+
 Rx.Observable
   .interval(CHECK_INTERVAL)
-  .switchMap(() => getOtherJobs().every(job => !!job['finished_at']))
+  .switchMap(() => getOtherJobs().do(x => console.log("Value", x)).every(job => !!job['finished_at']))
   .filter(x => !!x)
   .take(1)
   .subscribe(x => console.log("Finished with all builds"));
