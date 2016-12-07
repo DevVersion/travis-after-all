@@ -24,8 +24,9 @@ console.log("Waiting for other jobs to finish.");
 
 Rx.Observable
   .interval(CHECK_INTERVAL)
+  .do(() => console.log("===="))
   .switchMap(() => getOtherJobs()
-    .filter(job => job.id !== jobNumber)
+    // .filter(job => job.id !== jobNumber)
     .do(x => console.log("Job", x.id))
     .every(job => !!job['finished_at'])
   )
