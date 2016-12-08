@@ -18,8 +18,6 @@ if (!jobNumber.endsWith('.1')) {
   return;
 }
 
-console.log("Waiting for other jobs to finish.");
-
 let waitInterval = setInterval(() => {
 
   getOtherJobs().then(jobs => {
