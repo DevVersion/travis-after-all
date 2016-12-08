@@ -1,9 +1,9 @@
 {
-  "name": "travis-after-all",
+  "name": "travis-after-modes",
   "version": "0.0.1",
   "description": "Runs specific tasks after all Travis modes have finished",
   "main": "src/index.js",
-  "repository": "https://github.com/DevVersion/travis-after-all.git",
+  "repository": "https://github.com/DevVersion/travis-after-modes.git",
   "author": "Paul Gschwendtner <paulgschwendtner@gmail.com>",
   "license": "MIT",
   "dependencies": {
