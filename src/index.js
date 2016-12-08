@@ -49,7 +49,7 @@ function getOtherJobs() {
   return sendRequest('builds/' + buildId)
     .then(result => result['matrix'])
     .then(jobs => {
-      return jobs.filter(job => job.number !== jobNumber)
+      return jobs.filter(job => job.number !== jobNumber && !job['allow_failure'])
     });
 }
 
