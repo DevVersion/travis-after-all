@@ -6,7 +6,6 @@ if (!process.env['TRAVIS_BUILD_ID']) {
 }
 
 const request = require('request-promise');
-const Rx = require('rxjs');
 
 const API_ENDPOINT = 'https://api.travis-ci.org';
 const CHECK_INTERVAL = 10 * 1000;
@@ -16,38 +15,52 @@ const jobNumber = process.env['TRAVIS_JOB_NUMBER'];
 
 // The leader job will always wait for the others jobs to finish.
 if (!jobNumber.endsWith('.1')) {
-  console.log("Not waiting for other jobs because only leader waits.");
   return;
 }
 
 console.log("Waiting for other jobs to finish.");
 
-Rx.Observable
-  .interval(CHECK_INTERVAL)
-  .flatMap(() => getOtherJobs())
-  .filter(jobs => jobs.every(job => !!job['finished_at']))
-  .take(1)
-  .subscribe(x => console.log("Finished with all builds"));
+let waitInterval = setInterval(() => {
+
+  getOtherJobs().then(jobs => {
+
+    if (jobs.every(job => !!job['finished_at'] === false)) {
+      /* Not all modes finished yet. Wait for the next run. */
+      return;
+    }
+
+    let hasSuccess = jobs.every(job => job['result'] === 0);
+
+    /* Write the state to the console */
+    console.log(hasSuccess ? 'PASSED' : 'FAILED');
+
+    /* Stop the interval because all jobs finished properly. */
+    clearInterval(waitInterval);
+  });
+
+}, CHECK_INTERVAL);
+
 
 /**
  * Retrieves data about the other Travis CI jobs running in a matrix.
- * @returns {Observable.<Object>}
+ * @returns {Promise.<Object>}
  */
 function getOtherJobs() {
   return sendRequest('builds/' + buildId)
-    .map(result => result['matrix']);
+    .then(result => result['matrix'])
+    .then(jobs => {
+      return jobs.filter(job => job.number !== jobNumber)
+    });
 }
 
 /**
  * Sends a request to the Travis CI API and parses its json.
  * @param requestUrl Rest URL to access
- * @returns {Observable.<Object>} Parsed JSON Object
+ * @returns {Promise.<Object>} Parsed JSON Object
  */
 function sendRequest(requestUrl) {
-  return Rx.Observable.fromPromise(
-    request({
-      url: `${API_ENDPOINT}/${requestUrl}`,
-      json: true
-    })
-  );
+  return request({
+    url: `${API_ENDPOINT}/${requestUrl}`,
+    json: true
+  })
 }
