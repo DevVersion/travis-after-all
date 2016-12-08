@@ -24,7 +24,7 @@ let waitInterval = setInterval(() => {
 
   getOtherJobs().then(jobs => {
 
-    if (jobs.every(job => !!job['finished_at'] === false)) {
+    if (jobs.every(job => !!job['finished_at']) === false) {
       /* Not all modes finished yet. Wait for the next run. */
       return;
     }
