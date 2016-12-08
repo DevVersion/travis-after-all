@@ -2,7 +2,7 @@
 
 if (!process.env['TRAVIS_BUILD_ID']) {
   console.error('The script can only run inside of a Travis CI build.');
-  process.exit(1);
+  process.exit(2);
 }
 
 const request = require('request-promise');
@@ -20,7 +20,8 @@ if (!jobNumber.endsWith('.1')) {
 
 console.log("Waiting for other jobs to finish.");
 
-let waitInterval = setInterval(() => {
+/* Runs an interval which checks for the other modes to finish. */
+setInterval(() => {
 
   getOtherJobs().then(jobs => {
 
@@ -31,15 +32,10 @@ let waitInterval = setInterval(() => {
 
     let hasSuccess = jobs.every(job => job['result'] === 0);
 
-    /* Write the state to the console */
-    console.log(hasSuccess ? 'PASSED' : 'FAILED');
-
-    /* Stop the interval because all jobs finished properly. */
-    clearInterval(waitInterval);
+    process.exit(hasSuccess ? 0 : 1)
   });
 
 }, CHECK_INTERVAL);
-
 
 /**
  * Retrieves data about the other Travis CI jobs running in a matrix.
