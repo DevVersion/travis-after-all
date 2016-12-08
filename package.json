@@ -1,6 +1,6 @@
 {
   "name": "travis-after-modes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Runs specific tasks after all Travis modes have finished",
   "main": "src/index.js",
   "repository": "https://github.com/DevVersion/travis-after-modes.git",
@@ -10,5 +10,5 @@
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   },
-  "bin": "/src/index.js"
+  "bin": "src/index.js"
 }
