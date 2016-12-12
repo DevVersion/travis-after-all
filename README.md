@@ -1,4 +1,6 @@
-# travis-after-modes
+# travis-after-modes 
+[![Build Status](https://travis-ci.org/DevVersion/travis-after-modes.svg?branch=master)](https://travis-ci.org/DevVersion/travis-after-modes)
+
 Travis CI After All Event Implementation
 
 ### Installation
