@@ -25,14 +25,15 @@ let waitInterval = setInterval(() => {
   getOtherJobs().then(jobs => {
 
     if (jobs.every(job => !!job['finished_at']) === false) {
-      /* Not all modes finished yet. Wait for the next run. */
+      // Print a message each interval, because otherwise Travis might exit due to no output.
+      console.log(`Not all modes have finished yet. Waiting ${CHECK_INTERVAL / 1000} seconds.`);
       return;
     }
 
     let hasSuccess = jobs.every(job => job['result'] === 0);
 
-    /* Write the state to the console */
-    console.log(hasSuccess ? 'PASSED' : 'FAILED');
+    /* Exit the process with the retrieved exit code. */
+    process.exit(hasSuccess ? 0 : 1);
 
     /* Stop the interval because all jobs finished properly. */
     clearInterval(waitInterval);

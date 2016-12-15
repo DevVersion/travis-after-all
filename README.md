@@ -14,9 +14,7 @@ after_success:
 ```
 
 ```bash
-RESULT=`$(npm bin)/travis-after-modes`
-
-if [ "$RESULT" = "PASSED" ]; then
+if $(npm bin)/travis-after-modes; then
   echo "All travis modes passed"
 else 
   echo "Some travis modes failed"
