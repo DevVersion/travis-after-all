@@ -26,11 +26,14 @@ let waitInterval = setInterval(() => {
 
     if (jobs.every(job => !!job['finished_at']) === false) {
       // Print a message each interval, because otherwise Travis might exit due to no output.
-      console.log(`Not all modes have finished yet. Waiting ${CHECK_INTERVAL / 1000} seconds.`);
+      process.stdout.write('.');
       return;
     }
 
     let hasSuccess = jobs.every(job => job['result'] === 0);
+
+    /* Start a new line due to the progress bar */
+    console.log('');
 
     /* Exit the process with the retrieved exit code. */
     process.exit(hasSuccess ? 0 : 1);
