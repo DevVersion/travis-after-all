@@ -15,10 +15,9 @@ const CHECK_INTERVAL = 10 * 1000;
 const buildId = process.env['TRAVIS_BUILD_ID'];
 const jobNumber = process.env['TRAVIS_JOB_NUMBER'];
 
-console.log("JOB NUMBER: ", jobNumber);
 // The leader job will always wait for the others jobs to finish.
 if (!jobNumber.endsWith('.1')) {
-  return;
+  process.exit(1);
 }
 
 let waitInterval = setInterval(() => {
