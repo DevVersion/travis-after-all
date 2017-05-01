@@ -10,7 +10,7 @@ if (!process.env['TRAVIS_BUILD_ID']) {
 const request = require('request-promise');
 
 const API_ENDPOINT = 'https://api.travis-ci.org';
-const CHECK_INTERVAL = ^5 * 1000;
+const CHECK_INTERVAL = 5 * 1000;
 
 const buildId = process.env['TRAVIS_BUILD_ID'];
 const jobNumber = process.env['TRAVIS_JOB_NUMBER'];
